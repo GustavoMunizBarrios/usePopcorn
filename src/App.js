@@ -51,22 +51,38 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 const KEY = "c2b4256b";
-const query = "Interstellar";
+const query = "fvdfvdf";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(function () {
     async function fetchMovies() {
-      setIsLoading(true); // this indicate that loading is still happened
-      const res = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-      );
-      const data = await res.json();
-      setMovies(data.Search);
-      setIsLoading(false);
+      try {
+        setIsLoading(true); // this indicate that loading is still happened
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        );
+
+        const data = await res.json();
+
+        if (data.Response === "False") {
+          throw new Error("Movie not found");
+        }
+        setMovies(data.Search);
+      } catch (err) {
+        console.error(err.message);
+        if (err.message === "Failed to fetch")
+          setError("Something went wrong with fetching movies");
+        else {
+          setError(err.message);
+        }
+      } finally {
+        setIsLoading(false); // this indicate that loading is complete
+      }
     }
     fetchMovies();
   }, []);
@@ -80,7 +96,16 @@ export default function App() {
 
       <Main>
         {/* Left Column */}
-        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
+        <Box>
+          {/* if isLoading true (indicates that loading still happened) then render Loader*/}
+          {isLoading && <Loader />}
+
+          {/* If isLoading !false (indicates the loading is complete) and is no error then render MovieList */}
+          {!isLoading && !error && <MovieList movies={movies} />}
+
+          {/* If there is an error then render ErrorMessage*/}
+          {error && <ErrorMessage message={error} />}
+        </Box>
         {/* Right Column */}
         <Box>
           <WatchedSummary watched={watched} />
@@ -93,6 +118,14 @@ export default function App() {
 
 function Loader() {
   return <p className="loader">Loading...</p>;
+}
+
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>❌</span> {message}
+    </p>
+  );
 }
 
 function NavBar({ children }) {
