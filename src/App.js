@@ -60,41 +60,53 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(function () {
+  /*   useEffect(function () {
     console.log("A");
   }, []);
   useEffect(function () {
     console.log("B");
   });
-  console.log("C");
+  console.log("C"); */
 
-  useEffect(function () {
-    async function fetchMovies() {
-      try {
-        setIsLoading(true); // this indicate that loading is still happened
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${tempQuery}`
-        );
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setIsLoading(true); // this indicate that loading is still happened
+          setError(""); // reset Error
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          );
 
-        const data = await res.json();
+          const data = await res.json();
 
-        if (data.Response === "False") {
-          throw new Error("Movie not found");
+          if (data.Response === "False") {
+            throw new Error("Movie not found");
+          }
+          setMovies(data.Search);
+        } catch (err) {
+          console.error(err.message);
+          if (err.message === "Failed to fetch")
+            setError("Something went wrong with fetching movies");
+          else {
+            setError(err.message);
+          }
+        } finally {
+          setIsLoading(false); // this indicate that loading is complete
         }
-        setMovies(data.Search);
-      } catch (err) {
-        console.error(err.message);
-        if (err.message === "Failed to fetch")
-          setError("Something went wrong with fetching movies");
-        else {
-          setError(err.message);
-        }
-      } finally {
-        setIsLoading(false); // this indicate that loading is complete
       }
-    }
-    fetchMovies();
-  }, []);
+
+      if (query.length < 3) {
+        // if there are less than 3 letters in"Search" then...
+        setMovies([]);
+        setError("");
+        return;
+      }
+
+      fetchMovies();
+    },
+    [query]
+  );
 
   return (
     <>
