@@ -76,15 +76,19 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
+  //FETCHING MOVIES
   useEffect(
-    //FETCHING MOVIES
     function () {
+      //Abort controller is a native browser API, we used for clean up function
+      const controller = new AbortController();
+
       async function fetchMovies() {
         try {
           setIsLoading(true); // this indicate that loading is still happened
           setError(""); // reset Error
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
 
           const data = await res.json();
@@ -95,6 +99,10 @@ export default function App() {
           setMovies(data.Search);
         } catch (err) {
           console.error(err.message);
+          //this ignore AbortError
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
           if (err.message === "Failed to fetch")
             setError("Something went wrong with fetching movies");
           else {
@@ -113,6 +121,10 @@ export default function App() {
       }
 
       fetchMovies();
+
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );
@@ -331,10 +343,16 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     [selectedId]
   );
 
+  // Document title effect
   useEffect(
     function () {
       if (!title) return;
       document.title = `Movie | ${title}`;
+
+      // cleanup function for return to "usePopcorn" in the document title
+      return function () {
+        document.title = "usePopcorn";
+      };
     },
     [title]
   );
