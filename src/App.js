@@ -98,9 +98,9 @@ export default function App() {
           }
           setMovies(data.Search);
         } catch (err) {
-          console.error(err.message);
           //this ignore AbortError
           if (err.name !== "AbortError") {
+            console.log(err.message);
             setError(err.message);
           }
           if (err.message === "Failed to fetch")
