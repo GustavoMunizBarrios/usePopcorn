@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 
 /* const tempMovieData = [
@@ -64,7 +64,7 @@ export default function App() {
   //React call the function on the initial render and it'll use
   // whatever value is returned from this function as the initial
   // value of the state.
-  const [watched, setWatched] = useState(function () {
+  const [watched, setWatched] = useState(() => {
     const storedValue = localStorage.getItem("watched");
     return JSON.parse(storedValue);
   });
@@ -227,7 +227,32 @@ function NumResults({ movies }) {
     </p>
   );
 }
+
 function Search({ query, setQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(
+    function () {
+      console.log(inputEl.current); // <input class="search" type="text" placeholder="Search movies..." />
+
+      // this is the callback function that will be called when the user presses the Enter key
+      function callback(e) {
+        //If the active element is the input element, do nothing
+        if (document.activeElement === inputEl.current) return;
+
+        if (e.code === "Enter") {
+          inputEl.current.focus();
+          setQuery("");
+        }
+      }
+      // keydown is the event that fires when you press a key
+      document.addEventListener("keydown", callback);
+      // this is the cleanup function that runs when the component unmounts
+      return () => document.removeEventListener("keydown", callback);
+    },
+    [setQuery]
+  );
+
   return (
     <input
       className="search"
@@ -235,6 +260,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
