@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 
+//Test para commit
+
 /* const tempMovieData = [
   {
     imdbID: "tt1375666",
