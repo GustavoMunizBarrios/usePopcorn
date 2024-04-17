@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 
-//Test for commit
 
 /* const tempMovieData = [
   {
@@ -25,9 +24,9 @@ import StarRating from "./StarRating";
     Poster:
       "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
   },
-];
+]; */
 
-const tempWatchedData = [
+/* const tempWatchedData = [
   {
     imdbID: "tt1375666",
     Title: "Inception",
@@ -67,9 +66,13 @@ export default function App() {
   // whatever value is returned from this function as the initial
   // value of the state.
   const [watched, setWatched] = useState(() => {
+    if (!localStorage.getItem("watched")) {
+      return []
+    }
     const storedValue = localStorage.getItem("watched");
     return JSON.parse(storedValue);
   });
+  // console.log(`Esto es localStorage.getItem("watched"): ${localStorage.getItem("watched")}`);
 
   function handleSelectedMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
