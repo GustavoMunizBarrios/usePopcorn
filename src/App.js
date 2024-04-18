@@ -236,6 +236,7 @@ function NumResults({ movies }) {
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
+  // useEffect is a hook that allows you to run a function when the component mounts or unmounts
   useEffect(
     function () {
       console.log(inputEl.current); // <input class="search" type="text" placeholder="Search movies..." />
@@ -343,6 +344,13 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
 
+  const countRef = useRef(0);
+
+  // useEffect and useRef for counting the number of times the user changes the rating
+  useEffect(function () {
+    if (userRating) countRef.current = countRef.current++;
+  }, [userRating])
+
   const isWatched = !watched.some((movie) => movie.imdbID === selectedId);
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
@@ -370,6 +378,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      countRatingDecisions: countRef.current
     };
     onAddWatched(newWatchMovie);
     onCloseMovie();
