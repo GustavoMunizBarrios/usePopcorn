@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
 
 
 /* const tempMovieData = [
@@ -56,11 +57,8 @@ const KEY = "c2b4256b";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  // const [watched, setWatched] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const { movies, isLoading, error } = useMovies(query)
 
   //React call the function on the initial render and it'll use
   // whatever value is returned from this function as the initial
@@ -98,58 +96,7 @@ export default function App() {
     [watched]
   );
 
-  //FETCHING MOVIES
-  useEffect(
-    function () {
-      //Abort controller is a native browser API, we used for clean up function
-      const controller = new AbortController();
 
-      async function fetchMovies() {
-        try {
-          setIsLoading(true); // this indicate that loading is still happened
-          setError(""); // reset Error
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-
-          const data = await res.json();
-
-          if (data.Response === "False") {
-            throw new Error("Movie not found");
-          }
-          setMovies(data.Search);
-        } catch (err) {
-          //this ignore AbortError
-          if (err.name !== "AbortError") {
-            console.log(err.message);
-            setError(err.message);
-          }
-          if (err.message === "Failed to fetch")
-            setError("Something went wrong with fetching movies");
-          else {
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false); // this indicate that loading is complete
-        }
-      }
-
-      if (query.length < 3) {
-        // if there are less than 3 letters in"Search" then...
-        setMovies([]);
-        setError("");
-        return;
-      }
-
-      fetchMovies();
-
-      return function () {
-        controller.abort();
-      };
-    },
-    [query]
-  );
 
   return (
     <>
