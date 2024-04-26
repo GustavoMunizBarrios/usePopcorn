@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 
 /* const tempMovieData = [
@@ -58,19 +59,9 @@ const KEY = "c2b4256b";
 export default function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-  const { movies, isLoading, error } = useMovies(query)
+  const { movies, isLoading, error } = useMovies(query);
 
-  //React call the function on the initial render and it'll use
-  // whatever value is returned from this function as the initial
-  // value of the state.
-  const [watched, setWatched] = useState(() => {
-    if (!localStorage.getItem("watched")) {
-      return []
-    }
-    const storedValue = localStorage.getItem("watched");
-    return JSON.parse(storedValue);
-  });
-  // console.log(`Esto es localStorage.getItem("watched"): ${localStorage.getItem("watched")}`);
+  const [watched, setWatched] = useLocalStorageState([], "watched"); //watched is the state, setWatched is the function to update the state
 
   function handleSelectedMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -86,17 +77,6 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  //video 163
-  //LOCAL STORAGE (maintains data storage even when page is reloaded)
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
-
-
 
   return (
     <>
