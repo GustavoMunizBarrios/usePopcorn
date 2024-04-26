@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
+import { useKey } from "./useKey";
 
 
 /* const tempMovieData = [
@@ -163,28 +164,34 @@ function NumResults({ movies }) {
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  // useEffect is a hook that allows you to run a function when the component mounts or unmounts
-  useEffect(
-    function () {
-      console.log(inputEl.current); // <input class="search" type="text" placeholder="Search movies..." />
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  })
 
-      // this is the callback function that will be called when the user presses the Enter key
-      function callback(e) {
-        //If the active element is the input element, do nothing
-        if (document.activeElement === inputEl.current) return;
-
-        if (e.code === "Enter") {
-          inputEl.current.focus();
-          setQuery("");
-        }
-      }
-      // keydown is the event that fires when you press a key
-      document.addEventListener("keydown", callback);
-      // this is the cleanup function that runs when the component unmounts
-      return () => document.removeEventListener("keydown", callback);
-    },
-    [setQuery]
-  );
+  /*  // useEffect is a hook that allows you to run a function when the component mounts or unmounts
+   useEffect(
+     function () {
+       console.log(inputEl.current); // <input class="search" type="text" placeholder="Search movies..." />
+ 
+       // this is the callback function that will be called when the user presses the Enter key
+       function callback(e) {
+         //If the active element is the input element, do nothing
+         
+         if (e.code === "Enter") {
+           if (document.activeElement === inputEl.current) return;
+           inputEl.current.focus();
+           setQuery("");
+         }
+       }
+       // keydown is the event that fires when you press a key
+       document.addEventListener("keydown", callback);
+       // this is the cleanup function that runs when the component unmounts
+       return () => document.removeEventListener("keydown", callback);
+     },
+     [setQuery]
+   ); */
 
   return (
     <input
@@ -311,22 +318,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie();
   }
 
-  //Close MovieDetails with ESC key
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      }
-      document.addEventListener("keydown", callback);
-
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie]
-  );
+  useKey('Escape', onCloseMovie)
 
   useEffect(
     function () {
