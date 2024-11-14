@@ -4,7 +4,6 @@ import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
 import { useKey } from "./useKey";
 
-
 /* const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -168,7 +167,7 @@ function Search({ query, setQuery }) {
     if (document.activeElement === inputEl.current) return;
     inputEl.current.focus();
     setQuery("");
-  })
+  });
 
   /*  // useEffect is a hook that allows you to run a function when the component mounts or unmounts
    useEffect(
@@ -281,9 +280,12 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const countRef = useRef(0);
 
   // useEffect and useRef for counting the number of times the user changes the rating
-  useEffect(function () {
-    if (userRating) countRef.current = countRef.current++;
-  }, [userRating])
+  useEffect(
+    function () {
+      if (userRating) countRef.current = countRef.current++;
+    },
+    [userRating]
+  );
 
   const isWatched = !watched.some((movie) => movie.imdbID === selectedId);
   const watchedUserRating = watched.find(
@@ -312,13 +314,13 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
-      countRatingDecisions: countRef.current
+      countRatingDecisions: countRef.current,
     };
     onAddWatched(newWatchMovie);
     onCloseMovie();
   }
 
-  useKey('Escape', onCloseMovie)
+  useKey("Escape", onCloseMovie);
 
   useEffect(
     function () {
