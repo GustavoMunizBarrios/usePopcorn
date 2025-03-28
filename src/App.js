@@ -3,6 +3,8 @@ import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
 import { useKey } from "./useKey";
+import rateflix_logo_reduced_transparent from "./icons/rateflix_logo_reduced_transparent.png";
+import rateflix_isotipo_reduced from "./icons/rateflix_isotipo_reduced.png";
 
 /* const tempMovieData = [
   {
@@ -147,8 +149,14 @@ function NavBar({ children }) {
 function Logo() {
   return (
     <div className="logo">
-      <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
+      <span role="img"></span>
+      <img
+        className="img-logo"
+        src={rateflix_logo_reduced_transparent}
+        //src={rateflix_isotipo_reduced}
+        alt="Rateflix logo"
+      />
+      {/* <h1>usePopcorn</h1> */}
     </div>
   );
 }

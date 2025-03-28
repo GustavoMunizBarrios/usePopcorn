@@ -1,13 +1,14 @@
 :root {
-  --color-primary: #6741d9;
-  --color-primary-light: #7950f2;
-  --color-text: #dee2e6;
-  --color-text-dark: #adb5bd;
-  --color-background-100: #343a40;
-  --color-background-500: #2b3035;
-  --color-background-900: #212529;
-  --color-red: #fa5252;
-  --color-red-dark: #e03131;
+  --color-primary: #1e1e1e; /* Un rojo coral vibrante */
+  --color-primary-light: #252525; /* Versión más clara para destacar elementos */
+  --color-text: #f8f9fa; /* Blanco suave para buena legibilidad */
+  --color-text-dark: #ced4da; /* Gris claro para texto secundario */
+  --color-background-100: #1e1e1e; /* Negro-gris oscuro para el fondo */
+  --color-background-500: #252525; /* Un gris oscuro ligeramente más claro */
+  --color-background-900: #121212; /* Un negro profundo para más contraste */
+  --color-red: #fa5252; /* Manteniendo este rojo */
+  --color-red-dark: #e03131; /* Manteniendo este rojo oscuro */
+
 }
 
 * {
@@ -35,7 +36,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
-  height: 7.2rem;
+  height: 8.3rem;
   padding: 0 3.2rem;
   background-color: var(--color-primary);
   border-radius: 0.9rem;
@@ -91,6 +92,10 @@ body {
   font-size: 2.4rem;
   font-weight: 600;
   color: #fff;
+}
+
+.img-logo {
+  width: 15rem;
 }
 
 .search {
