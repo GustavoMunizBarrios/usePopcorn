@@ -4,7 +4,6 @@ import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
 import { useKey } from "./useKey";
 import rateflix_logo_reduced_transparent from "./icons/rateflix_logo_reduced_transparent.png";
-import rateflix_isotipo_reduced from "./icons/rateflix_isotipo_reduced.png";
 
 /* const tempMovieData = [
   {
